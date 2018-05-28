@@ -632,6 +632,8 @@ export class PostEditor extends React.Component {
 		const edits = { ...this.props.edits };
 		if ( status ) {
 			edits.status = status;
+			// Sync the status edit to Redux to ensure that Flux and Redux stores have the same info
+			this.props.editPost( this.props.siteId, this.props.postId, { status } );
 		}
 
 		if (
@@ -782,11 +784,6 @@ export class PostEditor extends React.Component {
 	};
 
 	onPublish = ( isConfirmed = false ) => {
-		const edits = {
-			...this.props.edits,
-			status: 'publish',
-		};
-
 		if ( this.props.isConfirmationSidebarEnabled && false === isConfirmed ) {
 			this.setConfirmationSidebar( { status: 'open' } );
 			return;
@@ -796,12 +793,19 @@ export class PostEditor extends React.Component {
 			this.setConfirmationSidebar( { status: 'publishing' } );
 		}
 
+		const edits = { ...this.props.edits };
+
 		// determine if this is a private publish
 		if ( utils.isPrivate( this.state.post ) ) {
 			edits.status = 'private';
 		} else if ( utils.isFutureDated( this.state.post ) ) {
 			edits.status = 'future';
+		} else {
+			edits.status = 'publish';
 		}
+
+		// Sync the status edit to Redux to ensure that Flux and Redux stores have the same info
+		this.props.editPost( this.props.siteId, this.props.postId, { status: edits.status } );
 
 		// Flush any pending raw content saves
 		this.saveRawContent();
