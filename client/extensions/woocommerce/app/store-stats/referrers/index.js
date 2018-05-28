@@ -59,7 +59,8 @@ class Referrers extends Component {
 	}
 
 	onSearch = str => {
-		if ( str === '' ) {
+		const trimmedStr = str.trim();
+		if ( trimmedStr === '' ) {
 			const { unit, slug } = this.props;
 			const basePath = '/store/stats/referrers';
 			const { queryParams: { referrer, ...queryParams } } = this.props; // eslint-disable-line no-unused-vars
@@ -68,7 +69,7 @@ class Referrers extends Component {
 			this.state.selectedReferrer = {};
 			page( `${ basePath }${ widgetPath }` );
 		}
-		this.setData( this.props, str );
+		this.setData( this.props, trimmedStr );
 	};
 
 	getFilteredData = ( filter, { data } ) => {
