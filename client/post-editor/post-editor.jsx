@@ -565,7 +565,7 @@ export class PostEditor extends React.Component {
 		}
 
 		// TODO: REDUX - remove flux actions when whole post-editor is reduxified
-		actions.autosave( this.props.selectedSite, callback );
+		actions.autosave( callback );
 
 		// If debounced / throttled autosave was pending, consider it flushed
 		this.throttledAutosave.cancel();
@@ -648,9 +648,7 @@ export class PostEditor extends React.Component {
 
 		// TODO: REDUX - remove flux actions when whole post-editor is reduxified
 		actions.saveEdited(
-			this.props.selectedSite,
 			edits,
-			{ isConfirmationSidebarEnabled: this.props.isConfirmationSidebarEnabled },
 			function( error ) {
 				if ( error && 'NO_CHANGE' !== error.message ) {
 					this.onSaveDraftFailure( error );
@@ -813,9 +811,7 @@ export class PostEditor extends React.Component {
 		edits.content = this.editor.getContent();
 
 		actions.saveEdited(
-			this.props.selectedSite,
 			edits,
-			{ isConfirmationSidebarEnabled: this.props.isConfirmationSidebarEnabled },
 			function( error ) {
 				if ( error && 'NO_CHANGE' !== error.message ) {
 					this.onPublishFailure( error );

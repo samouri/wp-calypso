@@ -25,12 +25,6 @@ jest.mock( 'lib/redux-bridge', () => ( {
 	reduxGetState: () => ( { ui: { editor: { saveBlockers: [] } } } ),
 } ) );
 
-const sampleSite = {
-	ID: 123,
-	jetpack: false,
-	slug: 'example.wordpress.com',
-	URL: 'https://example.wordpress.com',
-};
 describe( 'actions', () => {
 	let sandbox;
 
@@ -55,7 +49,7 @@ describe( 'actions', () => {
 			const spy = sandbox.spy();
 			sandbox.stub( PostEditStore, 'hasContent' ).returns( false );
 
-			PostActions.saveEdited( sampleSite, null, {}, spy );
+			PostActions.saveEdited( null, spy );
 
 			defer( () => {
 				expect( spy ).to.have.been.calledOnce;
@@ -71,7 +65,7 @@ describe( 'actions', () => {
 			sandbox.stub( PostEditStore, 'hasContent' ).returns( true );
 			sandbox.stub( PostEditStore, 'getChangedAttributes' ).returns( {} );
 
-			PostActions.saveEdited( sampleSite, null, {}, spy );
+			PostActions.saveEdited( null, spy );
 
 			defer( () => {
 				expect( spy ).to.have.been.calledOnce;
@@ -103,7 +97,7 @@ describe( 'actions', () => {
 			};
 			sandbox.stub( PostEditStore, 'getChangedAttributes' ).returns( changedAttributes );
 
-			PostActions.saveEdited( sampleSite, null, {}, ( error, data ) => {
+			PostActions.saveEdited( null, ( error, data ) => {
 				const normalizedAttributes = {
 					ID: 777,
 					site_ID: 123,
