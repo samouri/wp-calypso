@@ -17,14 +17,16 @@ import DocumentHead from 'components/data/document-head';
 import HeaderCake from 'components/header-cake';
 import FormCountrySelect from 'components/forms/form-country-select';
 import FormToggle from 'components/forms/form-toggle';
+import getCountries from 'state/selectors/get-countries';
 import Main from 'components/main';
+import QueryCountries from 'components/data/query-countries';
 import PageViewTracker from 'lib/analytics/page-view-tracker';
 import WizardProgressBar from 'components/wizard-progress-bar';
 import { getSelectedSiteSlug } from 'state/ui/selectors';
-import { forPayments as countriesList } from 'lib/countries-list';
 
 class GoogleMyBusinessEnterAddress extends Component {
 	static propTypes = {
+		countriesList: PropTypes.array,
 		siteSlug: PropTypes.string,
 		translate: PropTypes.func.isRequired,
 	};
@@ -64,7 +66,8 @@ class GoogleMyBusinessEnterAddress extends Component {
 						{ translate( 'Where are you located?' ) }
 					</h1>
 
-					<FormCountrySelect countriesList={ countriesList } />
+					<QueryCountries />
+					<FormCountrySelect countriesList={ this.props.countriesList } />
 
 					<FormToggle
 						checked={ this.state.isServiceAreaBusiness }
@@ -89,6 +92,7 @@ class GoogleMyBusinessEnterAddress extends Component {
 
 export default connect(
 	state => ( {
+		countriesList: getCountries( state, 'domains' ),
 		siteSlug: getSelectedSiteSlug( state ),
 	} )
 )( localize( GoogleMyBusinessEnterAddress ) );
