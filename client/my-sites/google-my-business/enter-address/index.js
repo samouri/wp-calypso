@@ -15,11 +15,13 @@ import { localize } from 'i18n-calypso';
 import Card from 'components/card';
 import DocumentHead from 'components/data/document-head';
 import HeaderCake from 'components/header-cake';
+import FormCountrySelect from 'components/forms/form-country-select';
 import FormToggle from 'components/forms/form-toggle';
 import Main from 'components/main';
 import PageViewTracker from 'lib/analytics/page-view-tracker';
 import WizardProgressBar from 'components/wizard-progress-bar';
 import { getSelectedSiteSlug } from 'state/ui/selectors';
+import { forPayments as countriesList } from 'lib/countries-list';
 
 class GoogleMyBusinessEnterAddress extends Component {
 	static propTypes = {
@@ -61,6 +63,8 @@ class GoogleMyBusinessEnterAddress extends Component {
 					<h1>
 						{ translate( 'Where are you located?' ) }
 					</h1>
+
+					<FormCountrySelect countriesList={ countriesList } />
 
 					<FormToggle
 						checked={ this.state.isServiceAreaBusiness }
