@@ -74,6 +74,7 @@
     "emoji-text": "0.2.6",
     "escape-regexp": "0.0.1",
     "escape-string-regexp": "1.0.3",
+    "events": "3.0.0",
     "exports-loader": "0.6.2",
     "express": "4.16.3",
     "express-useragent": "1.0.7",
@@ -296,17 +297,17 @@
   },
   "greenkeeper": {
     "ignore": [
-    "@babel/cli",
-    "@babel/core",
-    "@babel/plugin-proposal-export-default-from",
-    "@babel/plugin-syntax-jsx",
-    "@babel/plugin-transform-runtime",
-    "@babel/polyfill",
-    "@babel/preset-env",
-    "@babel/preset-react",
-    "@babel/preset-stage-2",
-    "@babel/runtime",
-    "jquery"
+      "@babel/cli",
+      "@babel/core",
+      "@babel/plugin-proposal-export-default-from",
+      "@babel/plugin-syntax-jsx",
+      "@babel/plugin-transform-runtime",
+      "@babel/polyfill",
+      "@babel/preset-env",
+      "@babel/preset-react",
+      "@babel/preset-stage-2",
+      "@babel/runtime",
+      "jquery"
     ]
   }
 }
