@@ -9,7 +9,6 @@ import page from 'page';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Gridicon from 'gridicons';
-import { get, memoize } from 'lodash';
 
 /**
  * Internal dependencies
@@ -37,7 +36,6 @@ import {
 	connectGoogleMyBusinessAccount,
 	disconnectAllGoogleMyBusinessAccounts,
 } from 'state/google-my-business/actions';
-import { getSiteKeyringConnection } from 'state/site-keyrings/selectors';
 
 class GoogleMyBusinessSelectBusinessType extends Component {
 	static propTypes = {
@@ -57,20 +55,10 @@ class GoogleMyBusinessSelectBusinessType extends Component {
 	handleConnect = keyringConnection => {
 		const { locations, siteId, siteSlug } = this.props;
 
-		this.props.recordTracksEventWithLocationCounts( 'calypso_google_my_business_select_business_type_connect' );
-
-		const disconnectAndReconnect = () =>
-			this.props
-				.disconnectAllGoogleMyBusinessAccounts( siteId )
-				.then( () => this.props.connectGoogleMyBusinessAccount( siteId, keyringConnection.ID ) );
-
-		Promise.resolve(
-			// If user does not have an existing site keyring connection for the account he just connected to,
-			// disconnect from existing accounts and create a new site keyring connection for the new one
-			! this.props.hasSiteKeyringConnection( keyringConnection.ID )
-				? disconnectAndReconnect()
-				: true
-		).then( () => {
+		this.props.connectGoogleMyBusinessAccount( siteId, keyringConnection.ID ).then( () => {
+			this.props.recordTracksEventWithLocationCounts(
+				'calypso_google_my_business_select_business_type_connect'
+			);
 			if ( locations.length === 0 ) {
 				page.redirect( `/google-my-business/new/${ siteSlug }` );
 			} else {
@@ -133,7 +121,7 @@ class GoogleMyBusinessSelectBusinessType extends Component {
 				>
 					{ translate( 'Create Listing', {
 						comment: 'Call to Action to add a business listing to Google My Business',
-					} ) }{ ' ' }
+					} ) }{' '}
 					<Gridicon icon="external" />
 				</Button>
 			);
@@ -238,18 +226,12 @@ class GoogleMyBusinessSelectBusinessType extends Component {
 	}
 }
 
-const hasSiteKeyringConnection = memoize(
-	( state, siteId ) => keyringId => !! getSiteKeyringConnection( state, siteId, keyringId ),
-	( state, siteId ) => siteId
-);
-
 export default connect(
 	state => {
 		const siteId = getSelectedSiteId( state );
 
 		return {
 			locations: getGoogleMyBusinessLocations( state, siteId ),
-			hasSiteKeyringConnection: hasSiteKeyringConnection( state, siteId ),
 			canUserManageOptions: canCurrentUser( state, siteId, 'manage_options' ),
 			siteId,
 			siteIsJetpack: isJetpackSite( state, siteId ),
@@ -258,7 +240,10 @@ export default connect(
 	},
 	{
 		recordTracksEvent: withEnhancers( recordTracksEvent, enhanceWithSiteType ),
-		recordTracksEventWithLocationCounts: withEnhancers( recordTracksEvent, [ enhanceWithLocationCounts, enhanceWithSiteType ] ),
+		recordTracksEventWithLocationCounts: withEnhancers( recordTracksEvent, [
+			enhanceWithLocationCounts,
+			enhanceWithSiteType,
+		] ),
 		connectGoogleMyBusinessAccount,
 		disconnectAllGoogleMyBusinessAccounts,
 	}
