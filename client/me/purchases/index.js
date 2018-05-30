@@ -79,10 +79,9 @@ export default function( router ) {
 	);
 
 	router(
-		paths.cancelPrivacyProtection(),
+		'/me/purchases/:purchaseId/cancel-privacy-protection',
 		redirectLoggedOut,
 		sidebar,
-		siteSelection,
 		controller.cancelPrivacyProtection,
 		makeLayout,
 		clientRender
@@ -121,6 +120,15 @@ export default function( router ) {
 	/**
 	 * Legacy route redirections
 	 */
+
+	// Remove site slugs
+	router(
+		'/me/purchases/:_/:purchaseId/:action(cancel-privacy-protection)',
+		( { params: { action, purchaseId } } ) =>
+			page.redirect( `/me/purchases/${ purchaseId }${ action ? `/${ action }` : '' }` )
+	);
+
+	// `/purchases` to `/me/purchases`
 	router( '/purchases', () => page.redirect( paths.purchasesRoot ) );
 
 	router(
@@ -132,7 +140,7 @@ export default function( router ) {
 					break;
 
 				case 'cancel-private-registration':
-					page.redirect( paths.cancelPrivacyProtection( siteName, purchaseId ) );
+					page.redirect( `/me/purchases/${ siteName }/${ purchaseId }/cancel-privacy-protection` );
 					break;
 
 				case 'confirm-cancel-domain':
@@ -159,6 +167,7 @@ export default function( router ) {
 			page.redirect( paths.editCardDetails( siteName, purchaseId, cardId ) )
 	);
 
+	// `/me/billing` to `/me/purchases/billing`
 	router( '/me/billing/:receiptId?', ( { params: { receiptId } } ) =>
 		page.redirect(
 			receiptId ? paths.billingHistoryReceipt( receiptId ) : page.redirect( paths.billingHistory )

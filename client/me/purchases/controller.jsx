@@ -73,16 +73,13 @@ export function addCreditCard( context, next ) {
 
 export function cancelPrivacyProtection( context, next ) {
 	if ( userHasNoSites() ) {
-		return noSites( context, '/me/purchases/:site/:purchaseId/cancel-privacy-protection' );
+		return noSites( context, '/me/purchases/:purchaseId/cancel-privacy-protection' );
 	}
 
 	setTitle( context, titles.cancelPrivacyProtection );
 
 	context.primary = (
-		<CancelPrivacyProtection
-			purchaseId={ parseInt( context.params.purchaseId, 10 ) }
-			siteSlug={ context.params.site }
-		/>
+		<CancelPrivacyProtection purchaseId={ parseInt( context.params.purchaseId, 10 ) } />
 	);
 	next();
 }

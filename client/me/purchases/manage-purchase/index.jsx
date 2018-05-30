@@ -68,7 +68,7 @@ import QueryCanonicalTheme from 'components/data/query-canonical-theme';
 import QueryUserPurchases from 'components/data/query-user-purchases';
 import RemovePurchase from '../remove-purchase';
 import VerticalNavItem from 'components/vertical-nav/item';
-import { cancelPurchase, cancelPrivacyProtection, purchasesRoot } from '../paths';
+import { cancelPurchase, purchasesRoot } from '../paths';
 import { CALYPSO_CONTACT } from 'lib/url/support';
 import titles from 'me/purchases/titles';
 import { addItems } from 'lib/upgrades/actions';
@@ -271,7 +271,9 @@ class ManagePurchase extends Component {
 		}
 
 		return (
-			<CompactCard href={ cancelPrivacyProtection( this.props.selectedSite.slug, id ) }>
+			<CompactCard
+				href={ `/me/purchases/${ this.props.selectedSite.slug }/${ id }/cancel-privacy-protection` }
+			>
 				{ translate( 'Cancel Privacy Protection' ) }
 			</CompactCard>
 		);

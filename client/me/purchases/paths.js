@@ -22,10 +22,6 @@ export function confirmCancelDomain( siteName, purchaseId ) {
 	return managePurchase( siteName, purchaseId ) + '/confirm-cancel-domain';
 }
 
-export function cancelPrivacyProtection( siteName, purchaseId ) {
-	return managePurchase( siteName, purchaseId ) + '/cancel-privacy-protection';
-}
-
 export function addCardDetails( siteName, purchaseId ) {
 	return managePurchase( siteName, purchaseId ) + '/payment/add';
 }
