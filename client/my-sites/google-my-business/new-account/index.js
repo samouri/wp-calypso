@@ -25,6 +25,7 @@ import { getSelectedSiteSlug } from 'state/ui/selectors';
 import { enhanceWithLocationCounts } from 'my-sites/google-my-business/utils';
 import { enhanceWithSiteType, recordTracksEvent } from 'state/analytics/actions';
 import { withEnhancers } from 'state/utils';
+import { connectGoogleMyBusinessAccount } from 'state/google-my-business/actions';
 
 class GoogleMyBusinessNewAccount extends Component {
 	static propTypes = {
@@ -50,10 +51,15 @@ class GoogleMyBusinessNewAccount extends Component {
 		);
 	};
 
-	handleConnect = () => {
-		this.props.recordTracksEventWithLocationCounts( 'calypso_google_my_business_new_account_connect' );
+	handleConnect = keyringConnection => {
+		const { siteId } = this.props;
 
-		page.redirect( `/google-my-business/${ this.props.siteSlug }` );
+		this.props.connectGoogleMyBusinessAccount( siteId, keyringConnection.ID ).then( () => {
+			this.props.recordTracksEventWithLocationCounts(
+				'calypso_google_my_business_new_account_connect'
+			);
+			page.redirect( `/google-my-business/${ this.props.siteSlug }` );
+		} );
 	};
 
 	handleNoThanksClick = () => {
@@ -128,8 +134,12 @@ export default connect(
 		siteSlug: getSelectedSiteSlug( state ),
 	} ),
 	{
+		connectGoogleMyBusinessAccount,
 		dismissNudge,
 		recordTracksEvent: withEnhancers( recordTracksEvent, enhanceWithSiteType ),
-		recordTracksEventWithLocationCounts: withEnhancers( recordTracksEvent, [ enhanceWithLocationCounts, enhanceWithSiteType ] ),
+		recordTracksEventWithLocationCounts: withEnhancers( recordTracksEvent, [
+			enhanceWithLocationCounts,
+			enhanceWithSiteType,
+		] ),
 	}
 )( localize( GoogleMyBusinessNewAccount ) );
